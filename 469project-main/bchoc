@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+import os
+import argparse
+import struct
+from collections import namedtuple
+from addLog import commandAdd, commandLog
+from CheckInOut import checkIn, checkOut
+from init_remove_verify import initblock, verify, remove
+from Blockchain import startChain
+
+#thsi will allow for us to use the arguments to parse
+parser = argparse.ArgumentParser()
+
+parser.add_argument("todo", help="variable for parsing")
+
+arguments = {}
+
+parser.add_argument("-c", help="case id")
+parser.add_argument("-i", action='append', nargs='?',help="item id")
+parser.add_argument("-r", "--reverse", action='store_true', help="reverses order of block")
+parser.add_argument("-n", help="num of entries")
+parser.add_argument("-y", "--why", help="reason for removal")
+parser.add_argument("-o", help="info of owner of evidence released")
+args = parser.parse_args()
+todo = args.todo
+#print("Args are", args)
+#need to read the filepath
+filepath = os.getenv("BCHOC_FILE_PATH")
+
+#no functionality
+if todo == "init":
+	initblock(filepath)
+	
+elif todo == "verify":
+	num_transactions = 0
+	#throw into verify function
+	verify(filepath)    #still waiting on name
+elif todo == "add":
+	#add case_id and item_id
+	arguments["case_id"] = args.c
+	arguments["item_id"] = args.i 	#loop?
+	#state = "CHECKEDIN"
+	commandAdd(arguments["case_id"], arguments["item_id"], filepath)
+elif todo == "checkout":
+	arguments["item_id"] = args.i
+	checkOut(arguments["item_id"], filepath)
+elif todo == "checkin":
+	arguments["item_id"] = args.i
+	checkIn(arguments["item_id"], filepath)
+elif todo == "log":
+	arguments["reverse"] = args.reverse
+	arguments["num"] = args.n
+	arguments["case_id"] = args.c
+	arguments["item_id"] = args.i
+	commandLog(arguments["reverse"], arguments["num"], arguments["case_id"], arguments["item_id"], filepath)    #still waiting on name
+elif todo == "remove":
+	arguments["item_id"] = args.i
+	arguments["reason"] = args.why
+	arguments["owner"] = args.o
+	remove(arguments["item_id"], arguments["reason"], arguments["owner"], filepath)   #still waiting on name

@@ -1,0 +1,8 @@
+Blockchain.py is the file that handles the creation and parsing of the Blockchain.
+unpackBlock() will convert a bunch of bytes into a block class and return it,
+packBlock() will do the opposite. Once you have a block packed, it can be written 
+to a file as bytes. Note that you will have to read and write the 'data' field
+to/from the file separately, as the length of 'data' is variable. As of right now 
+the functions don't bother with the data, but we can add that in later. It should 
+work correctly, and is just about ready to be used by any and all other functions,
+we just need to figure out what all we actually need from it.  
